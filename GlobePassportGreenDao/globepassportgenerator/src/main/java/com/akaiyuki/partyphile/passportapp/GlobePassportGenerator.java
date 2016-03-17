@@ -8,16 +8,22 @@ import de.greenrobot.daogenerator.ToMany;
 
 public class GlobePassportGenerator {
 
+    public static void main(String[] args) throws Exception {
+        Schema schema = new Schema(3, "com.akaiyuki.partyphile.passportapp.dao");
 
-    public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(1, "com.akaiyuki.partyphile.passportapp.dao");
+        addSchemas(schema);
 
+        new DaoGenerator().generateAll(schema, "../globepassportgenerator/src/main/java");
+    }
+
+
+    public static void addSchemas(Schema schema) {
 
 
         /* PEvents */
         Entity PEvents = schema.addEntity("PEvents");
-        PEvents.addIdProperty();
-        PEvents.addStringProperty("name");
+        PEvents = addOAsset(PEvents);
+        PEvents.addStringProperty("Eventname");
         PEvents.addStringProperty("venue");
         PEvents.addStringProperty("event_datetime");
         PEvents.addStringProperty("booth_map_img");
@@ -36,7 +42,7 @@ public class GlobePassportGenerator {
 
         /* PAppSettings */
         Entity PAppSettings = schema.addEntity("PAppSettings");
-        PAppSettings.addIdProperty();
+        PAppSettings = addOAsset(PAppSettings);
         PAppSettings.addIntProperty("is_secure");
         PAppSettings.addStringProperty("adhoc_base_path");
         PAppSettings.addStringProperty("test_base_path");
@@ -61,31 +67,19 @@ public class GlobePassportGenerator {
         PAppSettings.addStringProperty("cities");
         PAppSettings.addStringProperty("interstitial");
 
+    }
 
-
-
-
-
-
-//        Entity person = schema.addEntity("Person");
-//        person.addIdProperty();
-//        person.addStringProperty("name");
-//        person.addStringProperty("comment");
-//
-//        Entity lease = schema.addEntity("Lease");
-//        lease.addIdProperty();
-//        lease.addStringProperty("item");
-//        lease.addStringProperty("comment");
-//        lease.addLongProperty("leasedate");
-//        lease.addLongProperty("returndate");
-
-//        Property personId = lease.addLongProperty("personId").getProperty();
-//        lease.addToOne(person, personId);
-//
-//        ToMany personToLease = person.addToMany(lease, personId);
-//        personToLease.setName("leases");
-
-        new DaoGenerator().generateAll(schema, "../app/src/main/java");
+    private static Entity addOAsset(Entity entity) {
+        entity.addIdProperty().autoincrement().unique();
+        entity.addBooleanProperty("archived");
+        entity.addDateProperty("dateUpdated");
+        entity.addIntProperty("groupOrder");
+        entity.addStringProperty("name");
+        entity.addIntProperty("sortOrder");
+        entity.addStringProperty("tags");
+        entity.addStringProperty("timeStamp");
+        entity.addLongProperty("pid");
+        return entity;
     }
 
 
